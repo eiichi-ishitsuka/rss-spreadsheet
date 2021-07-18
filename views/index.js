@@ -12,8 +12,8 @@ function getDataForHtml() {
     let name = list[i][0];
     let data = getSheet(name).getDataRange().getValues();
     let row = [];
-    let col1 = getColumnbyElement('title').num;
-    let col2 = getColumnbyElement('link').num;
+    let col1 = getColumnbyElement('title') + 1;
+    let col2 = getColumnbyElement('link') + 1;
     for (let j = 1; j < data.length; j++){
       row.push({title: data[j][col1],url: data[j][col2],});
     }

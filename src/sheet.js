@@ -44,20 +44,25 @@ function writeSheet(sheetName, data) {
   let startColumn = getStartColumn(sheet);
   if (startRow <= 2) {
     // RSS要素名をヘッダとして出力
-    let header = []
+    let header = ['check'];
     for (let i = 0; i < RSS_ELEMENTS.length; i++){
       header.push(RSS_ELEMENTS[i].name);
     }
     sheet.getRange(1,1,1,header.length).setValues([header]);
-    startRow++;
-    startColumn = 1;
+    startRow = 2;
+    startColumn = 2;
   } else {
     // すでに連携済みのlinkと重複する場合は追記しない
     data = distinct(sheet, data);
   }
-  
+  if (data.length == 0) {
+    return;
+  }
   // RSSで取得した値を追記
   sheet.getRange(startRow, startColumn,data.length,data[0].length).setValues(data);
+
+  // チェックボックス追加
+  sheet.getRange(startRow, 1,data.length,1).insertCheckboxes();
 }
 
 /**
@@ -101,7 +106,7 @@ function distinct(sheet, data) {
   let returnData = []
   let existLinkList = getLinkList(sheet);
   // link要素の列番号をヘッダ名から取得
-  let linkColumnNum = getColumnbyElement('link').num;
+  let linkColumnNum = getColumnbyElement('link');
   for (let i = 0; i < data.length; i++){
     if (!existLinkList.includes(data[i][linkColumnNum])){
       returnData.push(data[i]);
@@ -117,23 +122,11 @@ function distinct(sheet, data) {
  * @return {array} シート上のlink一覧
  */
 function getLinkList(sheet){
-  // link要素の列番号をヘッダ名から取得
-  let linkColumnName = getColumnbyElement('link').name
   let data = sheet.getDataRange().getValues();
-  let linkColumnNum = 0;
-  for  (let i = 0; i < data[0].length; i++) {
-    if (data[0][i] == linkColumnName){
-      linkColumnNum = i; 
-      break;
-    }
-  }
-  if (linkColumnNum == 0) {
-    throw new Error('link要素に対応するカラムが見つかりませんでした');
-  }
-  // link要素の列の全データ取得
+  let linkColumnNum = getColumnbyElement('link');
   let linkList = []
   for (let i = 1; i < data.length; i++) {
-    linkList.push(data[i][linkColumnNum]);
+    linkList.push(data[i][linkColumnNum + 1]);
   }
   return linkList;
 }
@@ -142,23 +135,18 @@ function getLinkList(sheet){
  * RSS_ELEMENTS定数の要素名を指定し、列番号、名称を取得
  * @param {name} element - 要素
  * 
- * @return {object} 要素数,名称
+ * @return {int} 要素数
  */
 function getColumnbyElement(element){
-  let linkColumnNum = 0;
-  let linkColumnName = '';
+  let linkColumnNum = -1;
   for (let i = 0; i < RSS_ELEMENTS.length; i++) {
     if (RSS_ELEMENTS[i].element == element){
       linkColumnNum = i;
-      linkColumnName = RSS_ELEMENTS[i].name; 
       break;
     }
   }
-  if (linkColumnName = '') {
+  if (linkColumnNum == -1) {
     throw new Error(element + '要素がRSS_ELEMENTSに存在しません。');
   }
-  return {
-    num: linkColumnNum,
-    name: linkColumnName
-  }
+  return linkColumnNum;
 }
