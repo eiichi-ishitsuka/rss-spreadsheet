@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+  </head>
+  <body>
+    <?
+      let dataList = getDataForHtml();
+      for (let i = 0; i < dataList.length; i++){
+        let name = dataList[i].name;
+        let data = dataList[i].data;
+        output._=('<h2>' + name + '</h2>');
+        output._=('<table>');
+        for(let j = 0; j < data.length; j++){
+          output._=('<tr>');
+          output._=('<td><a href="' + data[j].url + '">' + data[j].title + '</a></td>');
+          output._=('</tr>');
+        }
+        output._=('</table>');
+      }
+    ?>
+  </body>
+</html>
