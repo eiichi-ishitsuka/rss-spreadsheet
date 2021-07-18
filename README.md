@@ -1,6 +1,6 @@
 # rss-spreadsheet
-GASでRSSからデータを取得し、スプレッドシートに出力するツール
-ソースをスプレッドシートと連動したGoogle Apps Script Projectにデプロイすることで、
+GASでRSSからデータを取得し、スプレッドシートに出力するツール  
+ソースをスプレッドシートと連動したGoogle Apps Script Projectにデプロイすることで、  
 RSSからスプレッドシートにフィードを出力することができます。
 
 # Clasp
