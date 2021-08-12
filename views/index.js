@@ -21,5 +21,3 @@ function getDataForHtml() {
   }
   return returnData;
 }
-
-
